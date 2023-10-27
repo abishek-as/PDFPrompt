@@ -1,8 +1,9 @@
+import Navbar from "@/components/Navbar";
+import Providers from "@/components/Providers";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Fira_Sans } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
-import Navbar from "@/components/Navbar";
 
 const font = Fira_Sans({ weight: "400", subsets: ["latin"] });
 
@@ -19,15 +20,17 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en" className="light">
-            <body
-                className={cn(
-                    "min-h-screen font-sans antialiased grainy",
-                    font.className
-                )}
-            >
-                <Navbar />
-                {children}
-            </body>
+            <Providers>
+                <body
+                    className={cn(
+                        "min-h-screen font-sans antialiased grainy",
+                        font.className
+                    )}
+                >
+                    <Navbar />
+                    {children}
+                </body>
+            </Providers>
         </html>
     );
 }
