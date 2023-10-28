@@ -1,8 +1,8 @@
+import { LoginLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs/server";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { buttonVariants } from "./ui/button";
-import { LoginLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs/server";
-import { ArrowRight } from "lucide-react";
 
 const Navbar = () => {
     return (
@@ -10,7 +10,7 @@ const Navbar = () => {
             <MaxWidthWrapper>
                 <div className="flex h-14 items-center justify-between border-b border-zinc-200">
                     <Link href="/" className="flex z-40 font-semibold">
-                        <span>PDFPrompt</span>
+                        <span>PDFPrompt.</span>
                     </Link>
 
                     {/* {TODO: add mobile Navbar} */}

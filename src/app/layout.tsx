@@ -3,6 +3,7 @@ import Providers from "@/components/Providers";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Fira_Sans } from "next/font/google";
+import "react-loading-skeleton/dist/skeleton.css";
 import "./globals.css";
 
 const font = Fira_Sans({ weight: "400", subsets: ["latin"] });
