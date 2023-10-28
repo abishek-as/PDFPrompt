@@ -5,6 +5,7 @@ import { z } from "zod";
 import { privateProcedure, publicProcedure, router } from "./trpc";
 
 export const appRouter = router({
+    // User Authorization
     authCallback: publicProcedure.query(async () => {
         const { getUser } = getKindeServerSession();
         const user = getUser();
@@ -25,6 +26,7 @@ export const appRouter = router({
 
         return { success: true };
     }),
+    // Fetch all user files
     getUserFiles: privateProcedure.query(async ({ ctx }) => {
         const { userId } = ctx;
 
@@ -32,6 +34,21 @@ export const appRouter = router({
             where: { userId },
         });
     }),
+    // Fetch particular file
+    getFile: privateProcedure
+        .input(z.object({ key: z.string() }))
+        .mutation(async ({ ctx, input }) => {
+            const { userId } = ctx;
+
+            const file = await db.file.findFirst({
+                where: { key: input.key, userId },
+            });
+
+            if (!file) throw new TRPCError({ code: "NOT_FOUND" });
+
+            return file;
+        }),
+    // Delete user files
     deleteFile: privateProcedure
         .input(z.object({ id: z.string() }))
         .mutation(async ({ ctx, input }) => {
