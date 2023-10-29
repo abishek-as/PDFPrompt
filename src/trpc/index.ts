@@ -26,6 +26,7 @@ export const appRouter = router({
 
         return { success: true };
     }),
+
     // Fetch all user files
     getUserFiles: privateProcedure.query(async ({ ctx }) => {
         const { userId } = ctx;
@@ -34,6 +35,23 @@ export const appRouter = router({
             where: { userId },
         });
     }),
+
+    // Get FileUpload status
+    getFileUploadStatus: privateProcedure
+        .input(z.object({ fileId: z.string() }))
+        .query(async ({ input, ctx }) => {
+            const file = await db.file.findFirst({
+                where: {
+                    id: input.fileId,
+                    userId: ctx.userId,
+                },
+            });
+
+            if (!file) return { status: "PENDING" as const };
+
+            return { status: file.uploadStatus };
+        }),
+
     // Fetch particular file
     getFile: privateProcedure
         .input(z.object({ key: z.string() }))
@@ -48,6 +66,7 @@ export const appRouter = router({
 
             return file;
         }),
+
     // Delete user files
     deleteFile: privateProcedure
         .input(z.object({ id: z.string() }))
