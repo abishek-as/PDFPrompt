@@ -11,14 +11,16 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Progress } from "./ui/progress";
 import { useToast } from "./ui/use-toast";
 
-const UploadDropzone = () => {
+const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
     const router = useRouter();
 
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [uploadProgress, setUploadProgress] = useState<number>(0);
     const { toast } = useToast();
 
-    const { startUpload } = useUploadThing("pdfUploader");
+    const { startUpload } = useUploadThing(
+        isSubscribed ? "proPlanUploader" : "freePlanUploader"
+    );
 
     const { mutate: startPolling } = trpc.getFile.useMutation({
         onSuccess: (file) => {
@@ -49,9 +51,10 @@ const UploadDropzone = () => {
             multiple={false}
             onDrop={async (acceptedFile) => {
                 setIsUploading(true);
+
                 const progressInterval = startSimulatedProgress();
 
-                // TODO: handle file uploading
+                // handle file uploading
                 const res = await startUpload(acceptedFile);
 
                 if (!res) {
@@ -63,7 +66,8 @@ const UploadDropzone = () => {
                 }
 
                 const [fileResponse] = res;
-                const key = fileResponse.key;
+
+                const key = fileResponse?.key;
 
                 if (!key) {
                     return toast({
@@ -84,7 +88,7 @@ const UploadDropzone = () => {
                     {...getRootProps()}
                     className="border h-64 m-4 border-dashed border-gray-300 rounded-lg"
                 >
-                    <div className="className='flex items-center justify-center h-full w-full'">
+                    <div className="flex items-center justify-center h-full w-full">
                         <label
                             htmlFor="dropzone-file"
                             className="flex flex-col items-center justify-center w-full h-full rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
@@ -98,7 +102,7 @@ const UploadDropzone = () => {
                                     or drag and drop
                                 </p>
                                 <p className="text-xs text-zinc-500">
-                                    PDF (up to 4MB)
+                                    PDF (up to {isSubscribed ? "16" : "4"}MB)
                                 </p>
                             </div>
 
@@ -132,6 +136,7 @@ const UploadDropzone = () => {
                                     ) : null}
                                 </div>
                             ) : null}
+
                             <input
                                 {...getInputProps()}
                                 type="file"
@@ -146,21 +151,24 @@ const UploadDropzone = () => {
     );
 };
 
-const UploadButton = () => {
+const UploadButton = ({ isSubscribed }: { isSubscribed: boolean }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     return (
         <Dialog
             open={isOpen}
             onOpenChange={(v) => {
-                if (!v) setIsOpen(v);
+                if (!v) {
+                    setIsOpen(v);
+                }
             }}
         >
             <DialogTrigger onClick={() => setIsOpen(true)} asChild>
                 <Button>Upload PDF</Button>
             </DialogTrigger>
+
             <DialogContent>
-                <UploadDropzone />
+                <UploadDropzone isSubscribed={isSubscribed} />
             </DialogContent>
         </Dialog>
     );

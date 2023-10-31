@@ -62,11 +62,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
         defaultValues: { page: "1" },
         resolver: zodResolver(CustomPageValidator),
     });
-
-    // resize pdf according to the screen
     const { width, ref } = useResizeDetector();
-
-    // To go to particular page
     const handlePageSubmit = ({ page }: TCustomPageValidator) => {
         setCurrPage(Number(page));
         setValue("page", String(page));
@@ -78,14 +74,14 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
                 <div className="flex items-center gap-1.5">
                     <Button
                         disabled={currPage <= 1}
-                        variant="ghost"
-                        aria-label="previous page"
                         onClick={() => {
                             setCurrPage((prev) =>
                                 prev - 1 > 1 ? prev - 1 : 1
                             );
                             setValue("page", String(currPage - 1));
                         }}
+                        variant="ghost"
+                        aria-label="previous page"
                     >
                         <ChevronDown className="h-4 w-4" />
                     </Button>
@@ -108,18 +104,19 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
                             <span>{numPages ?? "x"}</span>
                         </p>
                     </div>
+
                     <Button
                         disabled={
                             numPages === undefined || currPage === numPages
                         }
-                        variant="ghost"
-                        aria-label="next page"
                         onClick={() => {
                             setCurrPage((prev) =>
                                 prev + 1 > numPages! ? numPages! : prev + 1
                             );
                             setValue("page", String(currPage + 1));
                         }}
+                        variant="ghost"
+                        aria-label="next page"
                     >
                         <ChevronUp className="h-4 w-4" />
                     </Button>

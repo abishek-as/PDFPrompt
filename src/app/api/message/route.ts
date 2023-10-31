@@ -41,7 +41,7 @@ export const POST = async (req: NextRequest) => {
     });
 
     // 1: vectorize message
-    const pineconeIndex = pinecone.Index("pdf-prompt");
+    const pineconeIndex = pinecone.Index(process.env.PINECONE_INDEX!);
     const embeddings = new OpenAIEmbeddings({
         openAIApiKey: process.env.OPENAI_API_KEY,
     });
