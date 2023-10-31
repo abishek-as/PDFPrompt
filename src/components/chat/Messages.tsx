@@ -52,7 +52,9 @@ const Messages = ({ fileId }: MessagesProps) => {
     });
 
     useEffect(() => {
-        if (entry?.isIntersecting) fetchNextPage();
+        if (entry?.isIntersecting) {
+            fetchNextPage();
+        }
     }, [entry, fetchNextPage]);
 
     return (
